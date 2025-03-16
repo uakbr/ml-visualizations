@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import * as d3 from 'd3';
-import _ from 'lodash';
+import React, { useState } from 'react';
 
 const MLVisualizations = () => {
   const [activeTab, setActiveTab] = useState('isolation-vs-kmeans');
