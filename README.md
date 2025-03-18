@@ -1,70 +1,114 @@
-# Getting Started with Create React App
+# Machine Learning Algorithm Visualizations
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive web application demonstrating various machine learning algorithms and techniques through visual, step-by-step explanations.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+This application provides interactive visualizations for several machine learning concepts:
 
-### `npm start`
+1. **Isolation Forests vs K-Means Clustering**
+   - Compare anomaly detection versus clustering approaches
+   - Visualize how each algorithm processes the same dataset differently
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. **PCA vs Random Cut Forests**
+   - Understand dimensionality reduction through Principal Component Analysis
+   - Compare with how Random Cut Forests identify anomalies
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+3. **t-SNE Dimensionality Reduction**
+   - Interactive 3D to 2D visualization
+   - Understand how t-SNE preserves neighborhood relationships
 
-### `npm test`
+4. **Time Series Anomaly Detection**
+   - Visualize ARIMA-based anomaly detection
+   - Step-by-step breakdown of the modeling process
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+5. **Graph Neural Networks**
+   - Interactive message passing visualization
+   - Node feature space transformations and evolution
 
-### `npm run build`
+## Technologies Used
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- React 19.0.0
+- D3.js for data visualization
+- SVG animations for interactive explanations
+- Responsive design for all device sizes
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Getting Started
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
 
-### `npm run eject`
+- Node.js (v18.0 or higher recommended)
+- npm or yarn
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Installation
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/ml-visualizations.git
+   cd ml-visualizations
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. Create and activate a virtual environment (optional but recommended):
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Install dependencies:
+   ```
+   npm install
+   ```
 
-## Learn More
+4. Start the development server:
+   ```
+   npm start
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+5. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage
 
-### Code Splitting
+- Navigate between different visualizations using the tab navigation at the top
+- Use the step navigation buttons to progress through each explanation
+- Interact with the visualizations by hovering over elements to see additional information
+- Visualizations work on both desktop and mobile devices
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Project Structure
 
-### Analyzing the Bundle Size
+```
+ml-visualizations/
+├── public/                   # Static files
+├── src/                      # Source code
+│   ├── components/           # React components
+│   │   ├── common/           # Shared UI components
+│   │   │   └── StepNavigation.js
+│   │   ├── visualizations/   # Individual visualization components
+│   │   │   ├── IsolationVsKMeans.js
+│   │   │   ├── PCAvsRCF.js
+│   │   │   ├── TSNE.js
+│   │   │   ├── TimeSeriesAnomalyDetection.js
+│   │   │   └── GraphNeuralNetworks.js
+│   │   └── MLVisualizations.js
+│   ├── utils/                # Utility functions
+│   │   └── dataGenerators.js # Functions to generate sample data
+│   ├── App.js                # Main app component
+│   ├── App.css               # Main styles
+│   └── index.js              # Entry point
+└── package.json              # Dependencies and scripts
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Future Enhancements
 
-### Making a Progressive Web App
+- Add more ML algorithm visualizations (e.g., neural networks, decision trees)
+- Implement real-time data processing with actual ML libraries
+- Add ability to upload custom datasets for visualization
+- Implement interactive parameter tuning to see how algorithms behave
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## License
 
-### Advanced Configuration
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Acknowledgments
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Inspired by various educational resources on machine learning
+- Thanks to the creators of the libraries used in this project

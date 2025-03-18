@@ -1,3 +1,13 @@
+:root {
+  --primary-color: #3b82f6;    /* Blue */
+  --secondary-color: #8b5cf6;  /* Purple */
+  --success-color: #10b981;    /* Green */
+  --warning-color: #f59e0b;    /* Amber */
+  --danger-color: #ef4444;     /* Red */
+  --light-color: #f3f4f6;      /* Light Gray */
+  --dark-color: #1f2937;       /* Dark Gray */
+}
+
 .App {
   text-align: center;
   min-height: 100vh;
