@@ -1,45 +1,59 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const StepNavigation = ({ step, maxSteps, animating, handleStepChange, isMobile }) => {
-  // Progress bar calculation
+const StepNavigation = ({ step, maxSteps, animating, handleStepChange }) => {
+  // Progress percentage calculation
   const progressPercentage = ((step + 1) / (maxSteps + 1)) * 100;
+  
+  // Auto-play effect - always runs automatically
+  useEffect(() => {
+    let interval;
+    
+    if (!animating) {
+      interval = setInterval(() => {
+        if (step === maxSteps) {
+          // Loop back to the beginning when we reach the end
+          handleStepChange(0);
+        } else {
+          // Move to next step
+          handleStepChange(step + 1);
+        }
+      }, 3500); // Change steps every 3.5 seconds
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [step, maxSteps, animating, handleStepChange]);
+
+  // Get step description based on current step
+  const getStepDescription = () => {
+    if (step === 0) return "Initial Data";
+    if (step === maxSteps) return "Final Result";
+    return `Step ${step} of ${maxSteps}`;
+  };
 
   return (
-    <>
-      <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'flex-row justify-between items-center'}`}>
-        <div className={`${isMobile ? 'flex justify-between' : 'space-x-2'}`}>
-          <button 
-            className="px-3 py-1 bg-gray-200 rounded"
-            onClick={() => handleStepChange(Math.max(0, step - 1))}
-            disabled={step === 0 || animating}
-            aria-label="Previous step"
-          >
-            <span aria-hidden="true">←</span> Previous
-          </button>
-          <button 
-            className="px-3 py-1 bg-blue-500 text-white rounded"
-            onClick={() => handleStepChange(Math.min(maxSteps, step + 1))}
-            disabled={step === maxSteps || animating}
-            aria-label="Next step"
-          >
-            Next <span aria-hidden="true">→</span>
-          </button>
-        </div>
+    <div className="animation-progress">
+      {/* Progress bar */}
+      <div className="progress-bar">
+        <div 
+          className="progress-indicator"
+          style={{ width: `${progressPercentage}%` }}
+        />
       </div>
       
-      {/* Progress indicator */}
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-        <div 
-          className="bg-blue-600 h-2.5 rounded-full transition-all duration-500 ease-in-out"
-          style={{ width: `${progressPercentage}%` }}
-          role="progressbar"
-          aria-valuenow={step + 1}
-          aria-valuemin="1"
-          aria-valuemax={maxSteps + 1}
-          aria-label={`Step ${step + 1} of ${maxSteps + 1}`}
-        ></div>
+      {/* Progress labels */}
+      <div className="progress-labels">
+        <span>Start</span>
+        <span>End</span>
       </div>
-    </>
+      
+      {/* Current step indicator */}
+      <div className="step-indicator">
+        <div className="playing-indicator" />
+        <span>{getStepDescription()}</span>
+      </div>
+    </div>
   );
 };
 

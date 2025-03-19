@@ -131,41 +131,35 @@ const TSNE = ({ isMobile }) => {
   const tSNEData = calculateTSNE(data, Math.min(step, 2));
   
   return (
-    <div className="flex flex-col space-y-6">
-      <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'flex-row justify-between items-center'}`}>
-        <h2 className="text-xl font-semibold">t-SNE: Dimensionality Reduction</h2>
+    <div className="visualization-module">
+      <div className="visualization-header">
+        <h2>t-SNE: Dimensionality Reduction</h2>
         <StepNavigation 
           step={step}
           maxSteps={maxSteps}
           animating={animating}
           handleStepChange={handleStepChange}
-          isMobile={isMobile}
         />
       </div>
       
-      <div className={`grid ${isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-2 gap-8'}`}>
+      <div className="visualization-content-grid">
         {/* Left visualization - 3D Data */}
-        <div className="flex flex-col items-center visualization-container">
-          <h3 className="text-lg font-medium mb-2">Original 3D Data</h3>
+        <div className="bento-box">
+          <h3>Original 3D Data</h3>
           <div 
-            className="border rounded p-4 w-full bg-gray-50 aspect-square relative"
-            data-tooltip="Interactive 3D visualization - drag to rotate"
+            className="visualization-canvas interactive"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           >
-            <div className="absolute top-2 right-2 text-xs bg-gray-200 px-2 py-1 rounded">
-              Drag to rotate 3D view
-            </div>
+            <div className="interaction-hint">Drag to rotate 3D view</div>
             <svg 
-              width="100%" 
-              height="100%" 
               viewBox="0 0 100 100" 
               preserveAspectRatio="xMidYMid meet"
               aria-label="3D data visualization"
               ref={svgRef}
-              className="cursor-move"
+              className={dragging ? "grabbing" : "grab"}
             >
               {/* Plot all data points in 3D projection */}
               {data.map((point, i) => {
@@ -223,7 +217,7 @@ const TSNE = ({ isMobile }) => {
               })}
             </svg>
           </div>
-          <div className="mt-4 text-sm text-gray-700 p-2 card min-h-[80px]">
+          <div className="explanation-text">
             {step === 0 && "Here is the original 3D data with 3 clusters. Each color represents a different cluster."}
             {step === 1 && "In high-dimensional data, points within the same cluster are typically closer to each other."}
             {step === 2 && "t-SNE will attempt to preserve these neighborhood relationships in a lower-dimensional space."}
@@ -232,13 +226,14 @@ const TSNE = ({ isMobile }) => {
         </div>
         
         {/* Right visualization - t-SNE 2D projection */}
-        <div className="flex flex-col items-center visualization-container">
-          <h3 className="text-lg font-medium mb-2">t-SNE 2D Projection</h3>
-          <div className="border rounded p-4 w-full bg-gray-50 aspect-square"
-               data-tooltip="t-SNE dimensionality reduction visualization">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" 
-                 preserveAspectRatio="xMidYMid meet"
-                 aria-label="t-SNE visualization">
+        <div className="bento-box">
+          <h3>t-SNE 2D Projection</h3>
+          <div className="visualization-canvas">
+            <svg 
+              viewBox="0 0 100 100" 
+              preserveAspectRatio="xMidYMid meet"
+              aria-label="t-SNE visualization"
+            >
               {/* Plot the t-SNE projected points */}
               {tSNEData.map((point, i) => (
                 <circle
@@ -286,7 +281,7 @@ const TSNE = ({ isMobile }) => {
               })}
             </svg>
           </div>
-          <div className="mt-4 text-sm text-gray-700 p-2 card min-h-[80px]">
+          <div className="explanation-text">
             {step === 0 && "Initially, t-SNE places points randomly in a 2D space."}
             {step === 1 && "The algorithm calculates pairwise similarities between points in both high and low dimensions."}
             {step === 2 && "t-SNE optimizes the 2D positions to preserve neighborhood relationships from the 3D space."}
@@ -295,14 +290,13 @@ const TSNE = ({ isMobile }) => {
         </div>
       </div>
       
-      <div className="mt-4 p-4 bg-blue-50 rounded border border-blue-200 info-callout">
-        <h3 className="font-semibold mb-2">About t-SNE:</h3>
-        <ul className="list-disc ml-6 space-y-2">
+      <div className="info-section">
+        <h3>About t-SNE:</h3>
+        <ul>
           <li><strong>Purpose:</strong> t-SNE (t-Distributed Stochastic Neighbor Embedding) is a dimensionality reduction technique specifically designed for visualizing high-dimensional data.</li>
           <li><strong>How it works:</strong> Unlike PCA, t-SNE focuses on preserving local neighborhood structures. It models probabilities of point pairs being neighbors and minimizes the difference between these probabilities in high and low dimensions.</li>
           <li><strong>Advantages:</strong> Excellent at revealing clusters and preserving local structures in the data, making it ideal for visualization.</li>
           <li><strong>Limitations:</strong> Results are sensitive to hyperparameters, can be computationally expensive, and doesn't preserve global structure as well as PCA.</li>
-          <li><strong>Applications:</strong> Widely used in bioinformatics, image processing, and natural language processing for visualizing complex datasets.</li>
         </ul>
       </div>
     </div>

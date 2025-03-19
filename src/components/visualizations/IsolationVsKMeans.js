@@ -30,27 +30,27 @@ const IsolationVsKMeans = ({ isMobile }) => {
   };
   
   return (
-    <div className="flex flex-col space-y-6">
-      <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'flex-row justify-between items-center'}`}>
-        <h2 className="text-xl font-semibold">Isolation Forests vs K-Means Clustering</h2>
+    <div className="visualization-module">
+      <div className="visualization-header">
+        <h2>Isolation Forests vs K-Means Clustering</h2>
         <StepNavigation 
           step={step}
           maxSteps={maxSteps}
           animating={animating}
           handleStepChange={handleStepChange}
-          isMobile={isMobile}
         />
       </div>
       
-      <div className={`grid ${isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-2 gap-8'}`}>
+      <div className="visualization-content-grid">
         {/* Left visualization for Isolation Forest */}
-        <div className="flex flex-col items-center visualization-container">
-          <h3 className="text-lg font-medium mb-2">Isolation Forest</h3>
-          <div className="border rounded p-4 w-full bg-gray-50 aspect-square"
-               data-tooltip="Interactive visualization of Isolation Forest algorithm">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" 
-                 preserveAspectRatio="xMidYMid meet"
-                 aria-label="Isolation Forest visualization">
+        <div className="bento-box">
+          <h3>Isolation Forest</h3>
+          <div className="visualization-canvas">
+            <svg 
+              viewBox="0 0 100 100" 
+              preserveAspectRatio="xMidYMid meet"
+              aria-label="Isolation Forest visualization"
+            >
               {/* Plot all data points */}
               {data.map((point, i) => (
                 <circle
@@ -120,7 +120,7 @@ const IsolationVsKMeans = ({ isMobile }) => {
               }
             </svg>
           </div>
-          <div className="mt-4 text-sm text-gray-700 p-2 card min-h-[80px]">
+          <div className="explanation-text">
             {step === 0 && "Isolation Forests start with the raw data points. Notice the outliers (red)."}
             {step === 1 && "The algorithm begins by randomly splitting the data space with vertical and horizontal cuts."}
             {step === 2 && "It continues splitting recursively, creating smaller and smaller partitions."}
@@ -129,13 +129,14 @@ const IsolationVsKMeans = ({ isMobile }) => {
         </div>
         
         {/* Right visualization for K-means */}
-        <div className="flex flex-col items-center visualization-container">
-          <h3 className="text-lg font-medium mb-2">K-Means Clustering</h3>
-          <div className="border rounded p-4 w-full bg-gray-50 aspect-square"
-               data-tooltip="Interactive visualization of K-Means clustering algorithm">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" 
-                 preserveAspectRatio="xMidYMid meet"
-                 aria-label="K-Means Clustering visualization">
+        <div className="bento-box">
+          <h3>K-Means Clustering</h3>
+          <div className="visualization-canvas">
+            <svg
+              viewBox="0 0 100 100" 
+              preserveAspectRatio="xMidYMid meet"
+              aria-label="K-Means Clustering visualization"
+            >
               {/* Plot all data points */}
               {data.map((point, i) => (
                 <circle
@@ -194,7 +195,7 @@ const IsolationVsKMeans = ({ isMobile }) => {
               )}
             </svg>
           </div>
-          <div className="mt-4 text-sm text-gray-700 p-2 card min-h-[80px]">
+          <div className="explanation-text">
             {step === 0 && "K-Means starts with the raw data points. The goal is to group them into clusters."}
             {step === 1 && "The algorithm places K centroids (orange dots) in the data space (K=2 in this example)."}
             {step === 2 && "Each data point is assigned to its closest centroid, forming initial clusters."}
@@ -203,9 +204,9 @@ const IsolationVsKMeans = ({ isMobile }) => {
         </div>
       </div>
       
-      <div className="mt-4 p-4 bg-blue-50 rounded border border-blue-200 info-callout">
-        <h3 className="font-semibold mb-2">Key Differences:</h3>
-        <ul className="list-disc ml-6 space-y-2">
+      <div className="info-section">
+        <h3>Key Differences:</h3>
+        <ul>
           <li><strong>Purpose:</strong> Isolation Forests focus on <em>anomaly detection</em> (finding outliers), while K-Means focuses on <em>clustering</em> (grouping similar points).</li>
           <li><strong>Approach:</strong> Isolation Forests recursively partition the space to isolate points, while K-Means groups points based on distance to centroids.</li>
           <li><strong>Outlier Handling:</strong> Isolation Forests specifically identify outliers, while K-Means assigns all points to clusters, including outliers.</li>
