@@ -1,5 +1,3 @@
-import React from 'react';
-
 // Generate data for Isolation Forest vs K-Means visualization
 export const generateClusterData = () => {
   // Regular clusters
@@ -159,4 +157,75 @@ export const generateGraphData = () => {
   }
   
   return { nodes, edges };
+};
+
+// Generate data for Decision Tree visualization
+export const generateDecisionTreeData = () => {
+  const dataset = [];
+  
+  // Class 1: Apples (mainly red, heavier, sweeter)
+  for (let i = 0; i < 25; i++) {
+    dataset.push({
+      id: `apple-${i}`,
+      color: Math.random() * 0.3 + 0.7, // 0.7-1.0 (higher is more red)
+      weight: Math.random() * 0.4 + 0.6, // 0.6-1.0 (higher is heavier)
+      sweetness: Math.random() * 0.5 + 0.5, // 0.5-1.0 (higher is sweeter)
+      class: 'apple'
+    });
+  }
+  
+  // Class 2: Oranges (mainly orange, medium weight, medium sweet)
+  for (let i = 0; i < 25; i++) {
+    dataset.push({
+      id: `orange-${i}`,
+      color: Math.random() * 0.3 + 0.3, // 0.3-0.6 (middle range is more orange)
+      weight: Math.random() * 0.4 + 0.3, // 0.3-0.7 (medium weight)
+      sweetness: Math.random() * 0.5 + 0.3, // 0.3-0.8 (medium sweet)
+      class: 'orange'
+    });
+  }
+  
+  // Class 3: Lemons (mainly yellow, lighter, sour)
+  for (let i = 0; i < 25; i++) {
+    dataset.push({
+      id: `lemon-${i}`,
+      color: Math.random() * 0.3 + 0.3, // 0.3-0.6 (middle-low range is more yellow)
+      weight: Math.random() * 0.3 + 0.1, // 0.1-0.4 (lighter)
+      sweetness: Math.random() * 0.3, // 0.0-0.3 (not sweet/sour)
+      class: 'lemon'
+    });
+  }
+  
+  return dataset;
+};
+
+// Generate a decision tree structure
+export const generateDecisionTree = () => {
+  return {
+    feature: 'sweetness',
+    threshold: 0.35,
+    left: {
+      // If sweetness <= 0.35
+      class: 'lemon',
+      samples: 27,
+      distribution: { apple: 2, orange: 3, lemon: 22 }
+    },
+    right: {
+      // If sweetness > 0.35
+      feature: 'color',
+      threshold: 0.65,
+      left: {
+        // If color <= 0.65
+        class: 'orange',
+        samples: 28,
+        distribution: { apple: 3, orange: 22, lemon: 3 }
+      },
+      right: {
+        // If color > 0.65
+        class: 'apple',
+        samples: 20,
+        distribution: { apple: 20, orange: 0, lemon: 0 }
+      }
+    }
+  };
 }; 

@@ -1,19 +1,27 @@
 import React from 'react';
 import './App.css';
 import MLVisualizations from './components/MLVisualizations';
+import ThemeToggle from './components/common/ThemeToggle';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Machine Learning Algorithm Visualizations</h1>
-        <p>Interactive comparisons of clustering, anomaly detection, and dimensionality reduction</p>
+        <div className="header-content">
+          <div className="title-container">
+            <h1>Machine Learning Algorithm Visualizations</h1>
+            <p>Interactive visualizations for understanding ML concepts</p>
+          </div>
+          <div className="controls-container">
+            <ThemeToggle />
+          </div>
+        </div>
       </header>
       <main className="App-main">
         <MLVisualizations />
       </main>
       <footer className="App-footer">
-        <p>Created with React | Deployed on Netlify</p>
+        <p>Created with React | Educational tool for ML visualizations</p>
       </footer>
     </div>
   );

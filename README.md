@@ -15,7 +15,7 @@ This application provides interactive visualizations for several machine learnin
    - Compare with how Random Cut Forests identify anomalies
 
 3. **t-SNE Dimensionality Reduction**
-   - Interactive 3D to 2D visualization
+   - Interactive 3D to 2D visualization with draggable rotation
    - Understand how t-SNE preserves neighborhood relationships
 
 4. **Time Series Anomaly Detection**
@@ -25,6 +25,19 @@ This application provides interactive visualizations for several machine learnin
 5. **Graph Neural Networks**
    - Interactive message passing visualization
    - Node feature space transformations and evolution
+
+6. **Decision Tree Classification**
+   - Interactive decision tree construction
+   - Feature space partitioning visualization
+
+## Enhanced Features
+
+- **Dark Mode Toggle**: Switch between light and dark themes for comfortable viewing
+- **Responsive Design**: Works on all screen sizes from mobile to desktop
+- **URL Sharing**: Share specific visualizations with direct links
+- **SVG Export**: Download any visualization as an SVG file
+- **Step-by-Step Walkthrough**: Each visualization includes an interactive step-by-step guide
+- **Interactive Elements**: Hover over data points and nodes for additional information
 
 ## Technologies Used
 
@@ -70,8 +83,10 @@ This application provides interactive visualizations for several machine learnin
 
 - Navigate between different visualizations using the tab navigation at the top
 - Use the step navigation buttons to progress through each explanation
+- Toggle between light and dark themes using the theme button in the header
+- Share or download visualizations using the share button in each visualization
 - Interact with the visualizations by hovering over elements to see additional information
-- Visualizations work on both desktop and mobile devices
+- Drag to rotate 3D visualizations in the t-SNE component
 
 ## Project Structure
 
@@ -81,13 +96,16 @@ ml-visualizations/
 ├── src/                      # Source code
 │   ├── components/           # React components
 │   │   ├── common/           # Shared UI components
-│   │   │   └── StepNavigation.js
+│   │   │   ├── ShareButton.js
+│   │   │   ├── StepNavigation.js
+│   │   │   └── ThemeToggle.js
 │   │   ├── visualizations/   # Individual visualization components
 │   │   │   ├── IsolationVsKMeans.js
 │   │   │   ├── PCAvsRCF.js
 │   │   │   ├── TSNE.js
 │   │   │   ├── TimeSeriesAnomalyDetection.js
-│   │   │   └── GraphNeuralNetworks.js
+│   │   │   ├── GraphNeuralNetworks.js
+│   │   │   └── DecisionTree.js
 │   │   └── MLVisualizations.js
 │   ├── utils/                # Utility functions
 │   │   └── dataGenerators.js # Functions to generate sample data
@@ -99,10 +117,12 @@ ml-visualizations/
 
 ## Future Enhancements
 
-- Add more ML algorithm visualizations (e.g., neural networks, decision trees)
+- Add more ML algorithm visualizations (neural networks, transformers)
 - Implement real-time data processing with actual ML libraries
 - Add ability to upload custom datasets for visualization
 - Implement interactive parameter tuning to see how algorithms behave
+- Add more advanced animations and transitions between visualization states
+- Create a tutorial mode with guided walkthroughs
 
 ## License
 

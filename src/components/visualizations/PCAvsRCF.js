@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { generatePCAData } from '../../utils/dataGenerators';
 import StepNavigation from '../common/StepNavigation';
 

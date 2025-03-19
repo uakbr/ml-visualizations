@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { generate3DData } from '../../utils/dataGenerators';
 import StepNavigation from '../common/StepNavigation';
 

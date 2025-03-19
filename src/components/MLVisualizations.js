@@ -4,10 +4,13 @@ import PCAvsRCF from './visualizations/PCAvsRCF';
 import TSNE from './visualizations/TSNE';
 import TimeSeriesAnomalyDetection from './visualizations/TimeSeriesAnomalyDetection';
 import GraphNeuralNetworks from './visualizations/GraphNeuralNetworks';
+import DecisionTree from './visualizations/DecisionTree';
+import ShareButton from './common/ShareButton';
+import { getTabFromHash, updateUrlHash } from '../utils/navigation';
 
 // Main component for ML Visualizations
 const MLVisualizations = () => {
-  const [activeTab, setActiveTab] = useState('isolation-vs-kmeans');
+  const [activeTab, setActiveTab] = useState(getTabFromHash);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
   // Handle window resize for responsive design
@@ -18,6 +21,21 @@ const MLVisualizations = () => {
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Update hash when tab changes
+  useEffect(() => {
+    updateUrlHash(activeTab);
+  }, [activeTab]);
+  
+  // Listen for hash changes
+  useEffect(() => {
+    const handleHashChange = () => {
+      setActiveTab(getTabFromHash());
+    };
+    
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
   
   return (
@@ -74,6 +92,16 @@ const MLVisualizations = () => {
         >
           <span className="font-medium">Graph Neural Networks</span>
         </button>
+        <button 
+          className={`px-4 py-2 rounded ml-2 ${activeTab === 'decision-tree' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          onClick={() => setActiveTab('decision-tree')}
+          role="tab"
+          aria-selected={activeTab === 'decision-tree'}
+          aria-controls="panel-decision-tree"
+          id="tab-decision-tree"
+        >
+          <span className="font-medium">Decision Tree Classification</span>
+        </button>
       </div>
       
       {/* Content Area */}
@@ -84,7 +112,10 @@ const MLVisualizations = () => {
             id="panel-isolation-vs-kmeans" 
             aria-labelledby="tab-isolation-vs-kmeans"
           >
-            <IsolationVsKMeans isMobile={isMobile} />
+            <div className="relative">
+              <ShareButton visualizationId="panel-isolation-vs-kmeans" />
+              <IsolationVsKMeans isMobile={isMobile} />
+            </div>
           </div>
         )}
         
@@ -94,7 +125,10 @@ const MLVisualizations = () => {
             id="panel-pca-vs-rcf" 
             aria-labelledby="tab-pca-vs-rcf"
           >
-            <PCAvsRCF isMobile={isMobile} />
+            <div className="relative">
+              <ShareButton visualizationId="panel-pca-vs-rcf" />
+              <PCAvsRCF isMobile={isMobile} />
+            </div>
           </div>
         )}
         
@@ -104,7 +138,10 @@ const MLVisualizations = () => {
             id="panel-tsne" 
             aria-labelledby="tab-tsne"
           >
-            <TSNE isMobile={isMobile} />
+            <div className="relative">
+              <ShareButton visualizationId="panel-tsne" />
+              <TSNE isMobile={isMobile} />
+            </div>
           </div>
         )}
         
@@ -114,7 +151,10 @@ const MLVisualizations = () => {
             id="panel-time-series" 
             aria-labelledby="tab-time-series"
           >
-            <TimeSeriesAnomalyDetection isMobile={isMobile} />
+            <div className="relative">
+              <ShareButton visualizationId="panel-time-series" />
+              <TimeSeriesAnomalyDetection isMobile={isMobile} />
+            </div>
           </div>
         )}
         
@@ -124,7 +164,23 @@ const MLVisualizations = () => {
             id="panel-gnn" 
             aria-labelledby="tab-gnn"
           >
-            <GraphNeuralNetworks isMobile={isMobile} />
+            <div className="relative">
+              <ShareButton visualizationId="panel-gnn" />
+              <GraphNeuralNetworks isMobile={isMobile} />
+            </div>
+          </div>
+        )}
+        
+        {activeTab === 'decision-tree' && (
+          <div 
+            role="tabpanel" 
+            id="panel-decision-tree" 
+            aria-labelledby="tab-decision-tree"
+          >
+            <div className="relative">
+              <ShareButton visualizationId="panel-decision-tree" />
+              <DecisionTree isMobile={isMobile} />
+            </div>
           </div>
         )}
       </div>
