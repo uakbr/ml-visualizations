@@ -1,31 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import IsolationVsKMeans from './visualizations/IsolationVsKMeans';
 import PCAvsRCF from './visualizations/PCAvsRCF';
 import TSNE from './visualizations/TSNE';
 import TimeSeriesAnomalyDetection from './visualizations/TimeSeriesAnomalyDetection';
 import GraphNeuralNetworks from './visualizations/GraphNeuralNetworks';
 import DecisionTree from './visualizations/DecisionTree';
+import ShareButton from './common/ShareButton';
 import { getTabFromHash, updateUrlHash } from '../utils/navigation';
+
+// Tab definitions for easier management
+const TABS = [
+  { id: 'isolation-vs-kmeans', label: 'Isolation Forests vs K-Means', description: 'Compare outlier detection with clustering' },
+  { id: 'pca-vs-rcf', label: 'PCA vs Random Cut Forests', description: 'Dimensionality reduction techniques' },
+  { id: 'tsne', label: 't-SNE Dimensionality Reduction', description: 'Visualize high-dimensional data' },
+  { id: 'time-series', label: 'Time Series Anomaly Detection', description: 'Find anomalies in time series data' },
+  { id: 'gnn', label: 'Graph Neural Networks', description: 'Neural networks for graph-structured data' },
+  { id: 'decision-tree', label: 'Decision Tree Classification', description: 'Tree-based classification algorithm' },
+];
 
 // Main component for ML Visualizations
 const MLVisualizations = () => {
   const [activeTab, setActiveTab] = useState(getTabFromHash);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [visitedTabs, setVisitedTabs] = useState(() => {
+    // Initialize from localStorage if available
+    const saved = localStorage.getItem('ml-viz-visited-tabs');
+    return saved ? JSON.parse(saved) : [getTabFromHash()];
+  });
+  
+  const dropdownRef = useRef(null);
+  
+  // Get current tab info
+  const currentTab = TABS.find(tab => tab.id === activeTab) || TABS[0];
   
   // Handle window resize for responsive design
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setIsDropdownOpen(false);
+      }
     };
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Update hash when tab changes
+  // Update hash when tab changes and track visited tabs
   useEffect(() => {
     updateUrlHash(activeTab);
-  }, [activeTab]);
+    
+    // Add to visited tabs if not already there
+    if (!visitedTabs.includes(activeTab)) {
+      const newVisitedTabs = [...visitedTabs, activeTab];
+      setVisitedTabs(newVisitedTabs);
+      localStorage.setItem('ml-viz-visited-tabs', JSON.stringify(newVisitedTabs));
+    }
+  }, [activeTab, visitedTabs]);
   
   // Listen for hash changes
   useEffect(() => {
@@ -37,142 +69,116 @@ const MLVisualizations = () => {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
   
+  // Handle clicks outside dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+  
+  // Handle tab change
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setIsDropdownOpen(false);
+  };
+  
   return (
-    <div className="component-container flex flex-col w-full h-full">
-      {/* Tab Navigation */}
-      <div className="tabs-container overflow-x-auto mb-6" role="tablist" aria-label="Machine Learning Algorithm Visualizations">
-        <button 
-          className={`tab-button ${activeTab === 'isolation-vs-kmeans' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('isolation-vs-kmeans')}
-          role="tab"
-          aria-selected={activeTab === 'isolation-vs-kmeans'}
-          aria-controls="panel-isolation-vs-kmeans"
-          id="tab-isolation-vs-kmeans"
-        >
-          Isolation Forests vs K-Means
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'pca-vs-rcf' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('pca-vs-rcf')}
-          role="tab"
-          aria-selected={activeTab === 'pca-vs-rcf'}
-          aria-controls="panel-pca-vs-rcf"
-          id="tab-pca-vs-rcf"
-        >
-          PCA vs Random Cut Forests
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'tsne' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('tsne')}
-          role="tab"
-          aria-selected={activeTab === 'tsne'}
-          aria-controls="panel-tsne"
-          id="tab-tsne"
-        >
-          t-SNE Dimensionality Reduction
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'time-series' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('time-series')}
-          role="tab"
-          aria-selected={activeTab === 'time-series'}
-          aria-controls="panel-time-series"
-          id="tab-time-series"
-        >
-          Time Series Anomaly Detection
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'gnn' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('gnn')}
-          role="tab"
-          aria-selected={activeTab === 'gnn'}
-          aria-controls="panel-gnn"
-          id="tab-gnn"
-        >
-          Graph Neural Networks
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'decision-tree' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('decision-tree')}
-          role="tab"
-          aria-selected={activeTab === 'decision-tree'}
-          aria-controls="panel-decision-tree"
-          id="tab-decision-tree"
-        >
-          Decision Tree Classification
-        </button>
+    <div className="component-container">
+      {/* Breadcrumb Navigation */}
+      <div className="breadcrumb-nav" aria-label="Breadcrumb">
+        <span>Home</span>
+        <span className="breadcrumb-separator" aria-hidden="true">›</span>
+        <span>{currentTab.label}</span>
       </div>
+    
+      {/* Tab Navigation - Desktop */}
+      {!isMobile ? (
+        <div className="tabs-container" role="tablist" aria-label="Machine Learning Algorithm Visualizations">
+          {TABS.map(tab => (
+            <button 
+              key={tab.id}
+              className={`tab-button ${activeTab === tab.id ? 'tab-active' : ''} ${visitedTabs.includes(tab.id) ? 'tab-visited' : ''}`}
+              onClick={() => handleTabChange(tab.id)}
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              aria-controls={`panel-${tab.id}`}
+              id={`tab-${tab.id}`}
+              title={tab.description}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      ) : (
+        /* Tab Navigation - Mobile (Dropdown) */
+        <div className="tabs-dropdown" ref={dropdownRef}>
+          <button 
+            className="mobile-nav-trigger"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            aria-expanded={isDropdownOpen}
+            aria-controls="mobile-tabs-menu"
+          >
+            <span>{currentTab.label}</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={isDropdownOpen ? 'rotate-180' : ''}>
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          
+          <div 
+            id="mobile-tabs-menu"
+            className={`tabs-dropdown-content ${isDropdownOpen ? 'open' : ''}`}
+            role="menu"
+          >
+            {TABS.map(tab => (
+              <button 
+                key={tab.id}
+                className={`tab-button ${activeTab === tab.id ? 'tab-active' : ''} ${visitedTabs.includes(tab.id) ? 'tab-visited' : ''}`}
+                onClick={() => handleTabChange(tab.id)}
+                role="menuitem"
+                aria-current={activeTab === tab.id ? 'page' : undefined}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       
-      {/* Content Area */}
+      {/* Content Area with sharing capability */}
       <div className="visualization-content">
-        {activeTab === 'isolation-vs-kmeans' && (
-          <div 
-            role="tabpanel" 
-            id="panel-isolation-vs-kmeans" 
-            aria-labelledby="tab-isolation-vs-kmeans"
-            className="bento-container"
-          >
-            <IsolationVsKMeans isMobile={isMobile} />
+        <div className="visualization-header-wrapper">
+          <div className="share-panel">
+            <ShareButton visualizationId={activeTab} />
           </div>
-        )}
+        </div>
         
-        {activeTab === 'pca-vs-rcf' && (
-          <div 
-            role="tabpanel" 
-            id="panel-pca-vs-rcf" 
-            aria-labelledby="tab-pca-vs-rcf"
-            className="bento-container"
-          >
-            <PCAvsRCF isMobile={isMobile} />
-          </div>
-        )}
-        
-        {activeTab === 'tsne' && (
-          <div 
-            role="tabpanel" 
-            id="panel-tsne" 
-            aria-labelledby="tab-tsne"
-            className="bento-container"
-          >
-            <TSNE isMobile={isMobile} />
-          </div>
-        )}
-        
-        {activeTab === 'time-series' && (
-          <div 
-            role="tabpanel" 
-            id="panel-time-series" 
-            aria-labelledby="tab-time-series"
-            className="bento-container"
-          >
-            <TimeSeriesAnomalyDetection isMobile={isMobile} />
-          </div>
-        )}
-        
-        {activeTab === 'gnn' && (
-          <div 
-            role="tabpanel" 
-            id="panel-gnn" 
-            aria-labelledby="tab-gnn"
-            className="bento-container"
-          >
-            <GraphNeuralNetworks isMobile={isMobile} />
-          </div>
-        )}
-        
-        {activeTab === 'decision-tree' && (
-          <div 
-            role="tabpanel" 
-            id="panel-decision-tree" 
-            aria-labelledby="tab-decision-tree"
-            className="bento-container"
-          >
-            <DecisionTree isMobile={isMobile} />
-          </div>
-        )}
+        {/* Render active tab content */}
+        {TABS.map(tab => (
+          activeTab === tab.id && (
+            <div 
+              key={tab.id}
+              role="tabpanel" 
+              id={`panel-${tab.id}`} 
+              aria-labelledby={`tab-${tab.id}`}
+              className="bento-container fade-in"
+            >
+              {tab.id === 'isolation-vs-kmeans' && <IsolationVsKMeans isMobile={isMobile} />}
+              {tab.id === 'pca-vs-rcf' && <PCAvsRCF isMobile={isMobile} />}
+              {tab.id === 'tsne' && <TSNE isMobile={isMobile} />}
+              {tab.id === 'time-series' && <TimeSeriesAnomalyDetection isMobile={isMobile} />}
+              {tab.id === 'gnn' && <GraphNeuralNetworks isMobile={isMobile} />}
+              {tab.id === 'decision-tree' && <DecisionTree isMobile={isMobile} />}
+            </div>
+          )
+        ))}
       </div>
     </div>
   );
 };
 
-export default MLVisualizations; 
+export default MLVisualizations;
